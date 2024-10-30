@@ -9,4 +9,6 @@ class MainRepository @Inject constructor(
     private val remoteData : CatalogRemoteData
 ) {
     suspend fun getCatalog() = remoteData.getCatalog()
+    suspend fun getSlugsData(slug: String) = remoteData.getSlugsData(slug)
+    suspend fun getProductData(slug: String) = remoteData.getProductData(slug)
 }
