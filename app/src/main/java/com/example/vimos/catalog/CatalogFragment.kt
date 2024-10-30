@@ -73,7 +73,7 @@ private fun CatalogScreen(
         )
     }) { padding ->
         CatalogList(
-            modifier = Modifier.padding(padding), if (preview) previewCatalogList else state.data
+            modifier = Modifier.padding(padding), if (preview) previewCatalogList else state.data //TODO убрать превью
         )
     }
 }

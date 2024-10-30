@@ -74,11 +74,13 @@ private fun ProductCardScreen(
                     contentDescription = "Localized description",
                     modifier = Modifier.padding(16.dp)
                 )
-            }
+            },
+
         )
 
     }
     ) { padding ->
+        //HorizontalDivider(thickness = 2.dp)
         ProductCardList(modifier = Modifier.padding(padding))
     }
 }
