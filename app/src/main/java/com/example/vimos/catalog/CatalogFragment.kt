@@ -1,6 +1,7 @@
 package com.example.vimos.catalog
 
 import android.os.Bundle
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
+import com.example.vimos.ui.theme.VIMOS_TOOLBAR
 import com.example.vimos.ui.theme.VimosTheme
 import com.skydoves.landscapist.glide.GlideImage
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,6 +47,7 @@ class CatalogFragment : BaseFragment() {
     override fun Create(arguments: Bundle?, resultChannel: Channel<Bundle>) {
         CatalogScreen()
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,42 +59,77 @@ private fun CatalogScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = { Icons.AutoMirrored.Outlined.ArrowBack },
+                navigationIcon = {
+                    if (state.depthIndexList.isNotEmpty()) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Вернуться назад",
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.removeDepth()
+                                }
+                                .size(48.dp)
+                                .padding(12.dp)
+                        )
+                    }
+                },
                 title = {
-                    Text(if (state.depthIndexList.isEmpty()) stringResource(R.string.start_top_bar) else state.topBarTitle)
-                }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = colorResource(R.color.Vimos),
+                    Text(
+                        text =
+                        if (state.depthIndexList.isEmpty()) stringResource(R.string.start_top_bar)
+                        else state.topBarTitle,
+                        modifier =  Modifier.padding(start = if (state.depthIndexList.isNotEmpty()) 6.dp else 0.dp)
+                    )
+
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = VIMOS_TOOLBAR,
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White
                 )
             )
         }) { padding ->
         CatalogList(
             modifier = Modifier.padding(padding),
-            state.showingData
+            state.showingData,
+            onItemClick = { itemIndex ->
+                viewModel.addDepth(itemIndex)
+            }
         )
     }
 }
 
 @Composable
 private fun CatalogList(
-    modifier: Modifier = Modifier, data: List<CatalogItem>
+    modifier: Modifier = Modifier,
+    data: List<CatalogItem>,
+    onItemClick: (Int) -> Unit = {}
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.padding(horizontal = 16.dp)
     ) {
-        items(data) {
-            CatalogListElement(it.iconUrl, it.title)
+        itemsIndexed(data) { index, item ->
+            CatalogListElement(item.iconUrl, item.title) { onItemClick(index) }
         }
     }
 }
 
 @Composable
-private fun CatalogListElement(iconUrl: String? = null, title: String) {
+private fun CatalogListElement(
+    iconUrl: String? = null,
+    title: String,
+    onItemClick: () -> Unit = {}
+) {
     val iconSize = 24.dp
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = iconSize),
+            .heightIn(min = iconSize)
+            .padding(vertical = 12.dp)
+            .clickable {
+                onItemClick()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         GlideImage(

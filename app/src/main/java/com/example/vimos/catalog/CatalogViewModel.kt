@@ -8,7 +8,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CatalogViewModel  @Inject constructor(private val repository: MainRepository): BaseViewModel<CatalogUiState>() {
+class CatalogViewModel  @Inject constructor(
+    private val repository: MainRepository):
+    BaseViewModel<CatalogUiState>() {
     override fun createInitialState() = CatalogUiState()
 
     init {
@@ -25,29 +27,52 @@ class CatalogViewModel  @Inject constructor(private val repository: MainReposito
                     dataFromServer = dataFromServer ?: emptyList()
                 )
             }
-            setShowingDate()
+            updateShowingDate()
         }
     }
 
-    private fun setShowingDate() {
+    internal fun addDepth(depth: Int){
+        val result = state.value.depthIndexList.toMutableList()
+        result.add(depth)
+        setState {
+            copy(
+                depthIndexList = result
+            )
+        }
+        updateShowingDate()
+    }
+
+    internal fun removeDepth(){
+        val result = state.value.depthIndexList.toMutableList()
+        result.removeLastOrNull()
+        setState {
+            copy(
+                depthIndexList = result
+            )
+        }
+        updateShowingDate()
+    }
+
+    private fun updateShowingDate() {
         var categoryData = state.value.dataFromServer
-        state.value.depthIndexList.forEach {
-            categoryData = categoryData[it].subCategories ?: emptyList()
+        var topBarTitle = ""
+        state.value.depthIndexList.forEach { item ->
+            topBarTitle = categoryData[item].title.orEmpty()
+            categoryData = categoryData[item].subCategories ?: emptyList()
         }
         val showingData = categoryData.map {
             CatalogItem(
                 id = it.id,
                 iconUrl = it.icon.orEmpty(),
                 title = it.title.orEmpty(),
-
                 )
         }
         setState {
             copy(
-                showingData = showingData
+                showingData = showingData,
+                topBarTitle = topBarTitle
             )
         }
     }
-
 
 }
