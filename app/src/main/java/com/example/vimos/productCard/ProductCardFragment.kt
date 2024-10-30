@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -43,6 +44,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vimos.R
 import com.example.vimos.ui.theme.VimosTheme
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 class ProductCardFragment : Fragment() {
@@ -118,13 +120,18 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
             success = { image, _ ->
                 Icon(
                     bitmap = image.imageBitmap!!,
-                    contentDescription = "Localized description",
+                    contentDescription = "Image",
                     modifier = imageModifier
                 )
             },
             failure = {
-                Box(modifier = imageModifier)
+                Icon(
+                    imageVector = Icons.Outlined.Home,
+                    contentDescription = "Image",
+                    modifier = imageModifier
+                )
             },
+            imageOptions = ImageOptions(alignment = Alignment.Center)
         )
         Text(
             color = Color.White,
@@ -149,8 +156,8 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
                 text = stringResource(R.string.price, state.data.price, state.data.units),
                 fontSize = 30.sp
             )
-            Box(contentAlignment = Alignment.BottomEnd) {
-                if (state.data.oldPrice.isNotBlank()) {
+            if (state.data.oldPrice.isNotBlank()) {
+                Box(contentAlignment = Alignment.BottomEnd) {
                     Text(
                         text = stringResource(
                             R.string.price,
@@ -183,7 +190,7 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
 }
 
 @Composable
-fun MeasureUnconstrainedViewWidth(
+private fun MeasureUnconstrainedViewWidth(
     viewToMeasure: @Composable () -> Unit,
     content: @Composable (measuredWidth: Dp) -> Unit,
 ) {

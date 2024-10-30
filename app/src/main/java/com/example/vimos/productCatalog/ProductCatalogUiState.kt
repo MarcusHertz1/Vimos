@@ -1,4 +1,19 @@
 package com.example.vimos.productCatalog
 
-class ProductCatalogUiState {
+import androidx.compose.runtime.Immutable
+import com.example.vimos.appbase.UiState
+
+@Immutable
+data class ProductCatalogUiState (
+    val data: List<Product> = emptyList(),
+) : UiState {
+    data class Product(
+        val iconUrl: String = "",
+        val discount: String = "",
+        val sku: String = "",
+        val title: String = "",
+        val price: String = "",
+        val oldPrice: String = "",
+        val units: String = ""
+    )
 }
