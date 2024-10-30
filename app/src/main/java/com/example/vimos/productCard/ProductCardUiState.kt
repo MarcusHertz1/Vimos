@@ -4,14 +4,16 @@ import androidx.compose.runtime.Immutable
 import com.example.vimos.appbase.UiState
 
 @Immutable
-internal data class ProductCardUiState (
-    val data: List<CatalogItem> = emptyList(),
-    val topBarTitle: String = "",
-    val depth: Int = 0,
+data class ProductCardUiState (
+    val data: Product = Product(),
 ) : UiState {
-    data class CatalogItem(
-        val id: Int,
-        val iconUrl: String,
-        val title: String,
+    data class Product(
+        val iconUrl: String = "",
+        val discount: String = "",
+        val sku: String = "",
+        val title: String = "",
+        val price: String = "",
+        val oldPrice: String = "",
+        val units: String = ""
     )
 }
