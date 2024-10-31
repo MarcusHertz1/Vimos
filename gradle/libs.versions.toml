@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.1"
+coilNetworkOkhttp = "3.0.0-rc02"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -9,7 +10,6 @@ lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
 composeBom = "2024.10.00"
 fragmentKtx = "1.8.4"
-landscapistGlide = "2.4.1"
 converterGson = "2.9.0"
 hiltAndroid = "2.51.1"
 kotlinxSerializationJson = "1.7.3"
@@ -21,6 +21,8 @@ appcompat = "1.7.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilNetworkOkhttp" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -38,7 +40,6 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
-landscapist-glide = { module = "com.github.skydoves:landscapist-glide", version.ref = "landscapistGlide" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationUiKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }

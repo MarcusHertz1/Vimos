@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import coil3.compose.AsyncImage
 import com.example.vimos.MainActivity
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
@@ -44,7 +44,6 @@ import com.example.vimos.appbase.NavigationCommand
 import com.example.vimos.appbase.SLUG
 import com.example.vimos.ui.theme.VIMOS_TOOLBAR
 import com.example.vimos.ui.theme.VimosTheme
-import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.channels.Channel
 
 class CatalogFragment : BaseFragment() {
@@ -156,20 +155,12 @@ private fun CatalogListElement(
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        GlideImage(
-            imageModel = { "https://storage.vimos.ru/filter/1200w_webp/$iconUrl" },
-            success = { image, _ ->
-                Icon(
-                    bitmap = image.imageBitmap!!,
-                    contentDescription = title,
-                    modifier = Modifier
-                        .height(iconSize)
-                        .width(iconSize)
-                )
-            },
-            failure = {
-                Box(modifier = Modifier.size(iconSize))
-            }
+        AsyncImage(
+            model = "https://vsevolojsk.vimos.ru$iconUrl",
+            contentDescription = title,
+            modifier = Modifier
+                .height(iconSize)
+                .width(iconSize),
         )
         Text(
             text = title,

@@ -62,7 +62,6 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle)
-    implementation(libs.landscapist.glide)
     implementation(libs.androidx.appcompat)
 
     //Hilt
@@ -80,6 +79,9 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
 
 kapt {

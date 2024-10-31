@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -43,12 +42,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import coil3.compose.AsyncImage
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
 import com.example.vimos.appbase.toViewModelArguments
 import com.example.vimos.ui.theme.VimosTheme
-import com.skydoves.landscapist.ImageOptions
-import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.channels.Channel
 
 class ProductCardFragment : BaseFragment() {
@@ -121,26 +119,13 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        val imageModifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .size(200.dp)
-            .padding(16.dp)
-        GlideImage(
-            imageModel = { state.data.iconUrl },
-            success = { image, _ ->
-                Icon(
-                    bitmap = image.imageBitmap!!,
-                    contentDescription = "Image",
-                )
-            },
-            failure = {
-                Icon(
-                    imageVector = Icons.Outlined.Home,
-                    contentDescription = "Image",
-                )
-            },
-            modifier = imageModifier,
-            imageOptions = ImageOptions(alignment = Alignment.Center)
+        AsyncImage(
+            model = "https://storage.vimos.ru/filter/1200w_webp${state.data.iconUrl}",
+            contentDescription = state.data.title,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .size(200.dp)
+                .padding(16.dp),
         )
         if (state.data.discount.isNotBlank()) {
             Text(

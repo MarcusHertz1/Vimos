@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,13 +39,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import coil3.compose.AsyncImage
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
 import com.example.vimos.appbase.SLUG
 import com.example.vimos.appbase.toViewModelArguments
 import com.example.vimos.ui.theme.VimosTheme
-import com.skydoves.landscapist.ImageOptions
-import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.channels.Channel
 
 class ProductCatalogFragment : BaseFragment() {
@@ -124,26 +122,12 @@ private fun ProductListElement(
                             .padding(vertical = 2.dp, horizontal = 6.dp)
                     )
                 }
-                val modifier = Modifier
-                    .size(100.dp)
-                    .padding(16.dp)
-                GlideImage(
-                    imageModel = { element.iconUrl },
-                    success = { image, _ ->
-                        Icon(
-                            bitmap = image.imageBitmap!!,
-                            contentDescription = "Image",
-                            modifier = modifier
-                        )
-                    },
-                    failure = {
-                        Icon(
-                            imageVector = Icons.Outlined.Home,
-                            contentDescription = "Image",
-                            modifier = modifier
-                        )
-                    },
-                    imageOptions = ImageOptions(alignment = Alignment.Center)
+                AsyncImage(
+                    model = "https://storage.vimos.ru/filter/1200w_webp${element.iconUrl}",
+                    contentDescription = element.title,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(16.dp),
                 )
             }
             Column(modifier = Modifier.padding(start = 20.dp)) {
