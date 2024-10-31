@@ -22,7 +22,6 @@ class CatalogViewModel  @Inject constructor(
     private fun loadCatalogData() {
         viewModelScope.launch {
             val data = repository.getCatalog()
-            println("data=$data")
             val dataFromServer = data.body()
             setState {
                 copy(
@@ -63,6 +62,7 @@ class CatalogViewModel  @Inject constructor(
             topBarTitle = categoryData[item].title.orEmpty()
             slug = categoryData[item].slug.orEmpty()
             if(categoryData[item].subCategories.isNullOrEmpty()) {
+                removeDepth()
                 navigateTo(NavigationCommand.GoToProductCatalog(slug))
                 return
             }
