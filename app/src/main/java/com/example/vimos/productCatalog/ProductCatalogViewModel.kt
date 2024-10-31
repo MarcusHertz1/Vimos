@@ -44,13 +44,15 @@ internal class ProductCatalogViewModel @Inject constructor(
                 it.slug?.let { slug ->
                     async {
                         repository.getProductData(slug).body()?.let { dataFromServer ->
+                            val price = (dataFromServer.purchase?.price ?: 0) / 100
+                            val oldPrice = (dataFromServer.purchase?.priceOld ?: 0) / 100
                             Product(
                                 iconUrl = dataFromServer.images?.firstOrNull()?.original.orEmpty(),
                                 discount = dataFromServer.purchase?.discount?.toString().orEmpty(),
                                 sku = dataFromServer.sku?.toString().orEmpty(),
                                 title = dataFromServer.title.orEmpty(),
-                                price = dataFromServer.purchase?.price?.toString().orEmpty(),
-                                oldPrice = dataFromServer.purchase?.priceOld?.toString().orEmpty(),
+                                price = if(price==0)"" else price.toString(),
+                                oldPrice = if(oldPrice==0)"" else oldPrice.toString(),
                                 units = dataFromServer.units.orEmpty(),
                                 slug = slug
                             ).let { product ->
