@@ -13,12 +13,14 @@ landscapistGlide = "2.4.1"
 converterGson = "2.9.0"
 hiltAndroid = "2.51.1"
 kotlinxSerializationJson = "1.7.3"
+navigationCompose = "2.8.3"
 navigationUiKtx = "2.8.3"
 retrofit = "2.9.0"
 appcompat = "1.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

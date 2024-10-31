@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,8 +34,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
+import com.example.vimos.appbase.NavigationCommand
 import com.example.vimos.ui.theme.VIMOS_TOOLBAR
 import com.example.vimos.ui.theme.VimosTheme
 import com.skydoves.landscapist.glide.GlideImage
@@ -56,6 +59,21 @@ private fun CatalogScreen(
     viewModel: CatalogViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val navController = rememberNavController()
+    LaunchedEffect(Unit) {
+        viewModel.navigationCommands.collect { command ->
+            when (command) {
+                NavigationCommand.GoToCatalog -> {}
+                is NavigationCommand.GoToProductCard -> {}
+                is NavigationCommand.GoToProductCatalog -> {
+                    println("Techi: NavigationCommand.GoToCatalog ->")
+                    navController.navigate(R.id.action_catalogFragment_to_productCatalogFragment, Bundle().apply {
+                        putString("slug",command.slug)
+                    })
+                }
+            }
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(

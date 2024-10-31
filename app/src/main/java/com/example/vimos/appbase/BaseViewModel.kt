@@ -1,10 +1,14 @@
 package com.example.vimos.appbase
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<STATE: UiState> : ViewModel() {
 
@@ -20,4 +24,18 @@ abstract class BaseViewModel<STATE: UiState> : ViewModel() {
         }
     }
 
+    private val _navigationCommands = MutableSharedFlow<NavigationCommand>()
+    val navigationCommands: SharedFlow<NavigationCommand> get() = _navigationCommands
+
+    fun navigateTo(command: NavigationCommand) {
+        viewModelScope.launch {
+            _navigationCommands.emit(command)
+        }
+    }
+}
+
+sealed class NavigationCommand {
+    data object GoToCatalog : NavigationCommand()
+    data class GoToProductCatalog(val slug: String) : NavigationCommand()
+    data class GoToProductCard(val slug: String) : NavigationCommand()
 }

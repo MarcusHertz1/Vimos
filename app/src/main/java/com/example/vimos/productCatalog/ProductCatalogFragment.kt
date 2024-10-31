@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vimos.R
 import com.example.vimos.ui.theme.VimosTheme
@@ -64,7 +65,7 @@ class ProductCatalogFragment : Fragment() {
 
 @Composable
 private fun ProductCatalogState(
-    viewModel: ProductCatalogViewModel = viewModel()
+    viewModel: ProductCatalogViewModel = viewModel(extras = CreationExtras.Empty)
 ) {
     val state by viewModel.state.collectAsState()
     ProductCatalogScreen(state)

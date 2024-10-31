@@ -6,5 +6,28 @@
     <fragment
         android:id="@+id/catalogFragment"
         android:name="com.example.vimos.catalog.CatalogFragment"
-        android:label="CatalogFragment" />
+        android:label="CatalogFragment" >
+        <action
+            android:id="@+id/action_catalogFragment_to_productCatalogFragment"
+            app:destination="@id/productCatalogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productCatalogFragment"
+        android:name="com.example.vimos.productCatalog.ProductCatalogFragment"
+        android:label="ProductCatalogFragment" >
+        <action
+            android:id="@+id/action_productCatalogFragment_to_productCardFragment"
+            app:destination="@id/productCardFragment" />
+        <argument
+            android:name="slug"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/productCardFragment"
+        android:name="com.example.vimos.productCard.ProductCardFragment"
+        android:label="ProductCardFragment">
+        <argument
+            android:name="slug"
+            app:argType="string" />
+    </fragment>
 </navigation>
