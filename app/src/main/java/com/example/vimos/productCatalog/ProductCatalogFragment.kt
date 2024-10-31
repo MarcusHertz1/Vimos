@@ -93,18 +93,22 @@ private fun ProductCatalogList(
     onItemClick: (String) -> Unit = {}
 ) {
     LazyColumn(modifier = modifier) {
-        items(state.data) {
-            ProductListElement(it) { onItemClick(it.slug) }
+        items(state.data, key = { item -> item.sku }) {
+            ProductListElement(
+                modifier = Modifier.animateItem(),
+                element = it
+            ) { onItemClick(it.slug) }
         }
     }
 }
 
 @Composable
 private fun ProductListElement(
+    modifier: Modifier = Modifier,
     element: Product,
     onItemClick: () -> Unit = {}
 ) {
-    Column {
+    Column(modifier = modifier) {
         Row(modifier = Modifier
             .padding(20.dp)
             .clickable {
@@ -112,7 +116,7 @@ private fun ProductListElement(
             }
         ) {
             Box {
-                if(element.discount.isNotBlank()){
+                if (element.discount.isNotBlank()) {
                     Text(
                         color = Color.White,
                         text = "-${element.discount}%",

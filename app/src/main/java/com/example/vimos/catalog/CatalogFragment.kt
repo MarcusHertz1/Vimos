@@ -67,15 +67,17 @@ private fun CatalogScreen(
         viewModel.navigationCommands.collect { command ->
             when (command) {
                 is NavigationCommand.GoToProductCatalog -> {
-                    navController.navigate(R.id.action_catalogFragment_to_productCatalogFragment, Bundle().apply {
-                        putString(SLUG,command.slug)
-                    })
+                    navController.navigate(
+                        R.id.action_catalogFragment_to_productCatalogFragment,
+                        Bundle().apply {
+                            putString(SLUG, command.slug)
+                        })
                 }
             }
         }
     }
     BackHandler {
-        if (state.depthIndexList.isNotEmpty()){
+        if (state.depthIndexList.isNotEmpty()) {
             viewModel.removeDepth()
         } else activity?.finish()
     }
@@ -101,7 +103,7 @@ private fun CatalogScreen(
                         text =
                         if (state.depthIndexList.isEmpty()) stringResource(R.string.start_top_bar)
                         else state.topBarTitle,
-                        modifier =  Modifier.padding(start = if (state.depthIndexList.isNotEmpty()) 6.dp else 0.dp)
+                        modifier = Modifier.padding(start = if (state.depthIndexList.isNotEmpty()) 6.dp else 0.dp)
                     )
 
                 },
@@ -132,21 +134,25 @@ private fun CatalogList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.padding(horizontal = 16.dp)
     ) {
-        itemsIndexed(data) { index, item ->
-            CatalogListElement(item.iconUrl, item.title) { onItemClick(index) }
+        itemsIndexed(data, key = { _, item -> item.id ?: Math.random() }) { index, item ->
+            CatalogListElement(
+                modifier = Modifier.animateItem(),
+                iconUrl = item.iconUrl, title = item.title
+            ) { onItemClick(index) }
         }
     }
 }
 
 @Composable
 private fun CatalogListElement(
+    modifier: Modifier = Modifier,
     iconUrl: String? = null,
     title: String,
     onItemClick: () -> Unit = {}
 ) {
     val iconSize = 24.dp
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .heightIn(min = iconSize)
             .padding(vertical = 12.dp)
@@ -182,13 +188,5 @@ private val previewCatalogList = listOf(
 private fun CatalogListPreview() {
     VimosTheme {
         CatalogList(data = previewCatalogList)
-    }
-}
-
-@Preview(backgroundColor = 0xFFFFFFFF)
-@Composable
-private fun CatalogListElementPreview() {
-    VimosTheme {
-        CatalogListElement(iconUrl = "", "Сантехника и инженеры системы")
     }
 }
