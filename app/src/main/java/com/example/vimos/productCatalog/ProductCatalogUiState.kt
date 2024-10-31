@@ -17,5 +17,6 @@ data class Product(
     val title: String = "",
     val price: String = "",
     val oldPrice: String = "",
-    val units: String = ""
+    val units: String = "",
+    val slug: String = "",
 )

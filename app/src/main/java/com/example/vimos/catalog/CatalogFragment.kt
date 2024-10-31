@@ -45,10 +45,8 @@ import com.example.vimos.appbase.SLUG
 import com.example.vimos.ui.theme.VIMOS_TOOLBAR
 import com.example.vimos.ui.theme.VimosTheme
 import com.skydoves.landscapist.glide.GlideImage
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
 
-@AndroidEntryPoint
 class CatalogFragment : BaseFragment() {
     @Composable
     override fun Create(arguments: Bundle?, resultChannel: Channel<Bundle>) {
@@ -74,7 +72,6 @@ private fun CatalogScreen(
                         putString(SLUG,command.slug)
                     })
                 }
-                else -> {}
             }
         }
     }

@@ -51,7 +51,8 @@ internal class ProductCatalogViewModel @Inject constructor(
                                 title = dataFromServer.title.orEmpty(),
                                 price = dataFromServer.purchase?.price?.toString().orEmpty(),
                                 oldPrice = dataFromServer.purchase?.priceOld?.toString().orEmpty(),
-                                units = dataFromServer.units.orEmpty()
+                                units = dataFromServer.units.orEmpty(),
+                                slug = slug
                             ).let { product ->
                                 setState {
                                     copy(

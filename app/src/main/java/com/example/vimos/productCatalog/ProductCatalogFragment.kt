@@ -3,6 +3,7 @@ package com.example.vimos.productCatalog
 import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -42,16 +42,13 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
-import com.example.vimos.appbase.NavigationCommand
 import com.example.vimos.appbase.SLUG
 import com.example.vimos.appbase.toViewModelArguments
 import com.example.vimos.ui.theme.VimosTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
 
-@AndroidEntryPoint
 class ProductCatalogFragment : BaseFragment() {
     @Composable
     override fun Create(arguments: Bundle?, resultChannel: Channel<Bundle>) {
@@ -68,49 +65,54 @@ private fun ProductCatalogState(
     viewModel: ProductCatalogViewModel = viewModel(extras = arguments.toViewModelArguments())
 ) {
     val state by viewModel.state.collectAsState()
-    LaunchedEffect(Unit) {
-        viewModel.navigationCommands.collect { command ->
-            when (command) {
-                is NavigationCommand.GoToProductCard -> {
-                    navController.navigate(
-                        R.id.action_productCatalogFragment_to_productCardFragment,
-                        Bundle().apply {
-                            putString(SLUG, command.slug)
-                        })
-                }
-
-                else -> {}
-            }
-        }
+    ProductCatalogScreen(state) { slug ->
+        navController.navigate(
+            R.id.action_productCatalogFragment_to_productCardFragment,
+            Bundle().apply {
+                putString(SLUG, slug)
+            })
     }
-    ProductCatalogScreen(state)
 }
 
 @Composable
 private fun ProductCatalogScreen(
-    state: ProductCatalogUiState
+    state: ProductCatalogUiState,
+    onItemClick: (String) -> Unit = {}
 ) {
     Scaffold { padding ->
         ProductCatalogList(
             modifier = Modifier.padding(padding),
-            state = state
+            state = state,
+            onItemClick = onItemClick
         )
     }
 }
 
 @Composable
-private fun ProductCatalogList(modifier: Modifier = Modifier, state: ProductCatalogUiState) {
+private fun ProductCatalogList(
+    modifier: Modifier = Modifier,
+    state: ProductCatalogUiState,
+    onItemClick: (String) -> Unit = {}
+) {
     LazyColumn(modifier = modifier) {
         items(state.data) {
-            ProductListElement(it)
+            ProductListElement(it) { onItemClick(it.slug) }
         }
     }
 }
 
 @Composable
-private fun ProductListElement(element: Product) {
+private fun ProductListElement(
+    element: Product,
+    onItemClick: () -> Unit = {}
+) {
     Column {
-        Row(modifier = Modifier.padding(20.dp)) {
+        Row(modifier = Modifier
+            .padding(20.dp)
+            .clickable {
+                onItemClick()
+            }
+        ) {
             Box {
                 Text(
                     color = Color.White,

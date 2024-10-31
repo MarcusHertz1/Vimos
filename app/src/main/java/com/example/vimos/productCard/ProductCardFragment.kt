@@ -1,11 +1,9 @@
 package com.example.vimos.productCard
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,40 +37,40 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.vimos.R
+import com.example.vimos.appbase.BaseFragment
+import com.example.vimos.appbase.toViewModelArguments
 import com.example.vimos.ui.theme.VimosTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.channels.Channel
 
-class ProductCardFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-
-                ProductCardState()
-
-            }
-        }
+class ProductCardFragment : BaseFragment() {
+    @Composable
+    override fun Create(arguments: Bundle?, resultChannel: Channel<Bundle>) {
+        val navController = findNavController()
+        ProductCardState(arguments, navController)
     }
-}
 
+}
 @Composable
 private fun ProductCardState(
-    viewModel: ProductCardViewModel = viewModel()
+    arguments: Bundle?,
+    navController: NavController,
+    viewModel: ProductCardViewModel = viewModel(extras = arguments.toViewModelArguments())
 ) {
     val state by viewModel.state.collectAsState()
-    ProductCardScreen(state)
+    ProductCardScreen(state){ navController.popBackStack() }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductCardScreen(
-    state: ProductCardUiState
+    state: ProductCardUiState,
+    goBack: () -> Unit = {},
 ) {
     Scaffold(topBar = {
         TopAppBar(
@@ -82,8 +79,12 @@ private fun ProductCardScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Go back",
-                    modifier = Modifier.padding(16.dp)
-                )
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .clickable {
+                            goBack()
+                        },
+                    )
             },
             actions = {
                 Icon(
@@ -207,7 +208,7 @@ private fun MeasureUnconstrainedViewWidth(
 }
 
 val previewState = ProductCardUiState(
-    data = ProductCardUiState.Product(
+    data = Product(
         iconUrl = "",
         discount = "15",
         sku = "24764168",
