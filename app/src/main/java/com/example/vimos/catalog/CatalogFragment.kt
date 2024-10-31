@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -86,16 +87,16 @@ private fun CatalogScreen(
             TopAppBar(
                 navigationIcon = {
                     if (state.depthIndexList.isNotEmpty()) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = "Вернуться назад",
+                        IconButton(
+                            onClick = {viewModel.removeDepth()},
                             modifier = Modifier
-                                .clickable {
-                                    viewModel.removeDepth()
-                                }
                                 .size(48.dp)
-                                .padding(12.dp)
-                        )
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                                contentDescription = "Вернуться назад",
+                            )
+                        }
                     }
                 },
                 title = {

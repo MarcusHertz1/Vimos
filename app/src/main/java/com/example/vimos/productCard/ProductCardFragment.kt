@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,10 +15,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -79,26 +79,28 @@ private fun ProductCardScreen(
         TopAppBar(
             title = {},
             navigationIcon = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Go back",
+                IconButton(
+                    onClick = {goBack()},
                     modifier = Modifier
-                        .padding(16.dp)
-                        .clickable {
-                            goBack()
-                        },
-                )
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                        contentDescription = "Вернуться назад",
+                    )
+                }
             },
             actions = {
-                Icon(
-                    imageVector = Icons.Filled.Share,
-                    contentDescription = "Share",
+                IconButton(
+                    onClick = {shareText(context, "Арт. ${state.data.sku}\n${state.data.title}")},
                     modifier = Modifier
-                        .padding(16.dp)
-                        .clickable {
-                            shareText(context, "Арт. ${state.data.sku}\n${state.data.title}")
-                        }
-                )
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = "Поделиться",
+                    )
+                }
             },
         )
     }
