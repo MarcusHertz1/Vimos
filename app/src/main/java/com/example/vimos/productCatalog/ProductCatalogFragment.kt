@@ -1,9 +1,6 @@
 package com.example.vimos.productCatalog
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,34 +37,52 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.vimos.R
+import com.example.vimos.appbase.BaseFragment
+import com.example.vimos.appbase.NavigationCommand
+import com.example.vimos.appbase.SLUG
+import com.example.vimos.appbase.toViewModelArguments
 import com.example.vimos.ui.theme.VimosTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.channels.Channel
 
-class ProductCatalogFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-
-                ProductCatalogState()
-
-            }
-        }
+@AndroidEntryPoint
+class ProductCatalogFragment : BaseFragment() {
+    @Composable
+    override fun Create(arguments: Bundle?, resultChannel: Channel<Bundle>) {
+        val navController = findNavController() // Получаем NavController из фрагмента
+        ProductCatalogState(arguments, navController)
     }
+
 }
 
 @Composable
 private fun ProductCatalogState(
-    viewModel: ProductCatalogViewModel = viewModel(extras = CreationExtras.Empty)
+    arguments: Bundle?,
+    navController: NavController,
+    viewModel: ProductCatalogViewModel = viewModel(extras = arguments.toViewModelArguments())
 ) {
     val state by viewModel.state.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.navigationCommands.collect { command ->
+            when (command) {
+                is NavigationCommand.GoToProductCard -> {
+                    navController.navigate(
+                        R.id.action_productCatalogFragment_to_productCardFragment,
+                        Bundle().apply {
+                            putString(SLUG, command.slug)
+                        })
+                }
+
+                else -> {}
+            }
+        }
+    }
     ProductCatalogScreen(state)
 }
 
@@ -93,7 +108,7 @@ private fun ProductCatalogList(modifier: Modifier = Modifier, state: ProductCata
 }
 
 @Composable
-private fun ProductListElement(element: ProductCatalogUiState.Product) {
+private fun ProductListElement(element: Product) {
     Column {
         Row(modifier = Modifier.padding(20.dp)) {
             Box {
@@ -209,7 +224,7 @@ private fun MeasureUnconstrainedViewWidth(
     }
 }
 
-val previewElement = ProductCatalogUiState.Product(
+val previewElement = Product(
     iconUrl = "",
     discount = "15",
     sku = "24764168",

@@ -62,11 +62,7 @@ class CatalogViewModel  @Inject constructor(
         state.value.depthIndexList.forEach { item ->
             topBarTitle = categoryData[item].title.orEmpty()
             slug = categoryData[item].slug.orEmpty()
-            println("Techi: item=$item")
-            println("Techi: slug=$slug")
-            println("Techi: categoryData1=$categoryData")
             categoryData = categoryData[item].subCategories ?: emptyList()
-            println("Techi: categoryData2=$categoryData")
         }
         if(categoryData.isEmpty()) {
             navigateTo(NavigationCommand.GoToProductCatalog(slug))

@@ -46,7 +46,7 @@ data class ProductElement(
     @SerialName("images")
     val images: List<Images>?,
     @SerialName("purchase")
-    val purchase: List<Purchase>?,
+    val purchase: Purchase?,
     @SerialName("sku")
     val sku: Int?,
     @SerialName("units")

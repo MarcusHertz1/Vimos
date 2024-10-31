@@ -13,5 +13,5 @@ interface CatalogApiService {
     @GET("$PRODUCT_URL{slug}$SLUGS_URL_END")
     suspend fun getSlugsData(@Path("slug") slug: String) : Response<List<SlugElement>>
     @GET("$PRODUCT_URL{slug}")
-    suspend fun getProductData(@Path("slug") slug: String) : Response<List<ProductElement>>
+    suspend fun getProductData(@Path("slug") slug: String) : Response<ProductElement>
 }

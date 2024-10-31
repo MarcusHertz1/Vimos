@@ -34,10 +34,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
 import com.example.vimos.appbase.NavigationCommand
+import com.example.vimos.appbase.SLUG
 import com.example.vimos.ui.theme.VIMOS_TOOLBAR
 import com.example.vimos.ui.theme.VimosTheme
 import com.skydoves.landscapist.glide.GlideImage
@@ -48,7 +50,8 @@ import kotlinx.coroutines.channels.Channel
 class CatalogFragment : BaseFragment() {
     @Composable
     override fun Create(arguments: Bundle?, resultChannel: Channel<Bundle>) {
-        CatalogScreen()
+        val navController = findNavController() // Получаем NavController из фрагмента
+        CatalogScreen(navController)
     }
 
 }
@@ -56,21 +59,19 @@ class CatalogFragment : BaseFragment() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CatalogScreen(
+    navController: NavController,
     viewModel: CatalogViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    val navController = rememberNavController()
     LaunchedEffect(Unit) {
         viewModel.navigationCommands.collect { command ->
             when (command) {
-                NavigationCommand.GoToCatalog -> {}
-                is NavigationCommand.GoToProductCard -> {}
                 is NavigationCommand.GoToProductCatalog -> {
-                    println("Techi: NavigationCommand.GoToCatalog ->")
                     navController.navigate(R.id.action_catalogFragment_to_productCatalogFragment, Bundle().apply {
-                        putString("slug",command.slug)
+                        putString(SLUG,command.slug)
                     })
                 }
+                else -> {}
             }
         }
     }
