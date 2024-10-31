@@ -1,5 +1,7 @@
 package com.example.vimos.productCard
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,6 +76,7 @@ private fun ProductCardScreen(
     state: ProductCardUiState,
     goBack: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     Scaffold(topBar = {
         TopAppBar(
             title = {},
@@ -91,7 +95,11 @@ private fun ProductCardScreen(
                 Icon(
                     imageVector = Icons.Filled.Share,
                     contentDescription = "Share",
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .clickable {
+                            shareText(context, "Арт. ${state.data.sku}\n${state.data.title}")
+                        }
                 )
             },
         )
@@ -211,6 +219,15 @@ private fun MeasureUnconstrainedViewWidth(
             contentPlaceable.place(0, 0)
         }
     }
+}
+
+fun shareText(context: Context, textToShare: String) {
+    val shareIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, textToShare)
+        type = "text/plain"
+    }
+    context.startActivity(Intent.createChooser(shareIntent, "Поделиться через"))
 }
 
 val previewState = ProductCardUiState(
