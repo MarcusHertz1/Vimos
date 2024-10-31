@@ -56,6 +56,7 @@ class ProductCardFragment : BaseFragment() {
     }
 
 }
+
 @Composable
 private fun ProductCardState(
     arguments: Bundle?,
@@ -63,7 +64,7 @@ private fun ProductCardState(
     viewModel: ProductCardViewModel = viewModel(extras = arguments.toViewModelArguments())
 ) {
     val state by viewModel.state.collectAsState()
-    ProductCardScreen(state){ navController.popBackStack() }
+    ProductCardScreen(state) { navController.popBackStack() }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +85,7 @@ private fun ProductCardScreen(
                         .clickable {
                             goBack()
                         },
-                    )
+                )
             },
             actions = {
                 Icon(
@@ -122,26 +123,27 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
                 Icon(
                     bitmap = image.imageBitmap!!,
                     contentDescription = "Image",
-                    modifier = imageModifier
                 )
             },
             failure = {
                 Icon(
                     imageVector = Icons.Outlined.Home,
                     contentDescription = "Image",
-                    modifier = imageModifier
                 )
             },
+            modifier = imageModifier,
             imageOptions = ImageOptions(alignment = Alignment.Center)
         )
-        Text(
-            color = Color.White,
-            text = "-${state.data.discount}%",
-            fontSize = 20.sp,
-            modifier = Modifier
-                .background(Color.Red, RoundedCornerShape(5.dp))
-                .padding(vertical = 4.dp, horizontal = 8.dp)
-        )
+        if (state.data.discount.isNotBlank()) {
+            Text(
+                color = Color.White,
+                text = "-${state.data.discount}%",
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .background(Color.Red, RoundedCornerShape(5.dp))
+                    .padding(vertical = 4.dp, horizontal = 8.dp)
+            )
+        }
         Text(
             color = Color.Gray,
             text = stringResource(R.string.sku, state.data.sku)
@@ -153,7 +155,7 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                color = Color.Red,
+                color = if (state.data.oldPrice.isNotBlank()) Color.Red else Color.Unspecified,
                 text = stringResource(R.string.price, state.data.price, state.data.units),
                 fontSize = 30.sp
             )
@@ -167,22 +169,26 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
                         ),
                         fontSize = 22.sp,
                     )
-                }
-                MeasureUnconstrainedViewWidth(
-                    viewToMeasure = {
-                        Text(
-                            text = "2 400 ₽/шт.",
-                            fontSize = 22.sp,
-                            modifier = Modifier.padding(horizontal = 5.dp)
+                    MeasureUnconstrainedViewWidth(
+                        viewToMeasure = {
+                            Text(
+                                text = stringResource(
+                                    R.string.price,
+                                    state.data.oldPrice,
+                                    state.data.units
+                                ),
+                                fontSize = 22.sp,
+                                modifier = Modifier.padding(horizontal = 5.dp)
+                            )
+                        }
+                    ) { measuredWidth ->
+                        Image(
+                            painter = painterResource(R.drawable.ic_line_2),
+                            contentDescription = "Localized description",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.width(measuredWidth)
                         )
                     }
-                ) { measuredWidth ->
-                    Image(
-                        painter = painterResource(R.drawable.ic_line_2),
-                        contentDescription = "Localized description",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.width(measuredWidth)
-                    )
                 }
             }
         }

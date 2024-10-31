@@ -114,14 +114,16 @@ private fun ProductListElement(
             }
         ) {
             Box {
-                Text(
-                    color = Color.White,
-                    text = "-${element.discount}%",
-                    fontSize = 14.sp,
-                    modifier = Modifier
-                        .background(Color.Red, RoundedCornerShape(5.dp))
-                        .padding(vertical = 2.dp, horizontal = 6.dp)
-                )
+                if(element.discount.isNotBlank()){
+                    Text(
+                        color = Color.White,
+                        text = "-${element.discount}%",
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .background(Color.Red, RoundedCornerShape(5.dp))
+                            .padding(vertical = 2.dp, horizontal = 6.dp)
+                    )
+                }
                 val modifier = Modifier
                     .size(100.dp)
                     .padding(16.dp)
