@@ -1,6 +1,7 @@
 package com.example.vimos.catalog
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.vimos.MainActivity
 import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
 import com.example.vimos.appbase.NavigationCommand
@@ -51,7 +53,7 @@ class CatalogFragment : BaseFragment() {
     @Composable
     override fun Create(arguments: Bundle?, resultChannel: Channel<Bundle>) {
         val navController = findNavController() // Получаем NavController из фрагмента
-        CatalogScreen(navController)
+        CatalogScreen(navController, (activity as? MainActivity))
     }
 
 }
@@ -60,7 +62,8 @@ class CatalogFragment : BaseFragment() {
 @Composable
 private fun CatalogScreen(
     navController: NavController,
-    viewModel: CatalogViewModel = viewModel()
+    activity: MainActivity?,
+    viewModel: CatalogViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
@@ -74,6 +77,11 @@ private fun CatalogScreen(
                 else -> {}
             }
         }
+    }
+    BackHandler {
+        if (state.depthIndexList.isNotEmpty()){
+            viewModel.removeDepth()
+        } else activity?.finish()
     }
     Scaffold(
         topBar = {
