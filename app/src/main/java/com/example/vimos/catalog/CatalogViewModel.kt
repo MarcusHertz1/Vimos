@@ -58,16 +58,17 @@ class CatalogViewModel  @Inject constructor(
     private fun updateShowingDate() {
         var categoryData = state.value.dataFromServer
         var topBarTitle = ""
-        var slug = ""
+        var slug: String
         state.value.depthIndexList.forEach { item ->
             topBarTitle = categoryData[item].title.orEmpty()
             slug = categoryData[item].slug.orEmpty()
+            if(categoryData[item].subCategories.isNullOrEmpty()) {
+                navigateTo(NavigationCommand.GoToProductCatalog(slug))
+                return
+            }
             categoryData = categoryData[item].subCategories ?: emptyList()
         }
-        if(categoryData.isEmpty()) {
-            navigateTo(NavigationCommand.GoToProductCatalog(slug))
-            return
-        }
+
         val showingData = categoryData.map {
             CatalogItem(
                 id = it.id,
