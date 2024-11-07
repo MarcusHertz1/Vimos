@@ -155,6 +155,13 @@ private fun ProductListElement(
             }
         ) {
             Box {
+                AsyncImage(
+                    model = "https://storage.vimos.ru/filter/1200w_webp${element.iconUrl}",
+                    contentDescription = element.title,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(16.dp),
+                )
                 if (element.discount.isNotBlank()) {
                     Text(
                         color = Color.White,
@@ -165,13 +172,6 @@ private fun ProductListElement(
                             .padding(vertical = 2.dp, horizontal = 6.dp)
                     )
                 }
-                AsyncImage(
-                    model = "https://storage.vimos.ru/filter/1200w_webp${element.iconUrl}",
-                    contentDescription = element.title,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(16.dp),
-                )
             }
             Column(modifier = Modifier.padding(start = 20.dp)) {
                 Text(
@@ -187,7 +187,6 @@ private fun ProductListElement(
                         text = stringResource(R.string.price, element.price, element.units),
                         fontSize = 20.sp,
                     )
-                    println("mr: element.oldPrice = ${element.oldPrice}")
                     if (element.oldPrice.isNotBlank()) {
                         Box(contentAlignment = Alignment.BottomEnd) {
                             Text(

@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 internal class ProductCatalogViewModel @Inject constructor(
@@ -51,11 +52,14 @@ internal class ProductCatalogViewModel @Inject constructor(
                             val oldPrice = (dataFromServer.purchase?.priceOld ?: 0) / 100
                             Product(
                                 iconUrl = dataFromServer.images?.firstOrNull()?.original.orEmpty(),
-                                discount = dataFromServer.purchase?.discount?.toString().orEmpty(),
+                                discount =
+                                if ((dataFromServer.purchase?.discount ?: 0.0) > 0)
+                                    dataFromServer.purchase?.discount?.roundToInt()?.toString().orEmpty()
+                                else "",
                                 sku = dataFromServer.sku?.toString().orEmpty(),
                                 title = dataFromServer.title.orEmpty(),
                                 price = if (price == 0) "" else price.toString(),
-                                oldPrice = if (oldPrice == 0) "" else oldPrice.toString(),
+                                oldPrice = if (oldPrice == price) "" else oldPrice.toString(),
                                 units = dataFromServer.units.orEmpty(),
                                 slug = slug
                             ).let { product ->

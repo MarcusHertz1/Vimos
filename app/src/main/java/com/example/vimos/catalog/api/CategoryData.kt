@@ -1,70 +1,64 @@
 package com.example.vimos.catalog.api
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class CategoryData(
-    @SerialName("id")
+    @SerializedName("id")
     val id: Int?,
-    @SerialName("title")
+    @SerializedName("title")
     val title: String?,
-    @SerialName("seo_title")
+    @SerializedName("seo_title")
     val seoTitle: String?,
-    @SerialName("slug")
+    @SerializedName("slug")
     val slug: String?,
-    @SerialName("depth")
+    @SerializedName("depth")
     val depth: Int?,
-    @SerialName("icon")
+    @SerializedName("icon")
     val icon: String?,
-    @SerialName("description")
+    @SerializedName("description")
     val description: String?,
-    @SerialName("seo_description")
+    @SerializedName("seo_description")
     val seoDescription: String?,
-    @SerialName("banner_image")
+    @SerializedName("banner_image")
     val bannerImage: String?,
-    @SerialName("banner_mobile_image")
+    @SerializedName("banner_mobile_image")
     val bannerMobileImage: String?,
-    @SerialName("banner_href")
+    @SerializedName("banner_href")
     val bannerHref: String?,
-    @SerialName("subCategories")
+    @SerializedName("subCategories")
     val subCategories: List<CategoryData>?,
 )
 
-@Serializable
 data class SlugElement(
-    @SerialName("slug")
+    @SerializedName("slug")
     val slug: String?,
 )
 
-@Serializable
 data class ProductElement(
-    @SerialName("id")
+    @SerializedName("id")
     val id: Int?,
-    @SerialName("title")
+    @SerializedName("title")
     val title: String?,
-    @SerialName("images")
+    @SerializedName("images")
     val images: List<Images>?,
-    @SerialName("purchase")
+    @SerializedName("purchase")
     val purchase: Purchase?,
-    @SerialName("sku")
+    @SerializedName("sku")
     val sku: Int?,
-    @SerialName("units")
+    @SerializedName("units")
     val units: String?,
 )
 
-@Serializable
 data class Purchase(
-    @SerialName("price")
+    @SerializedName("price")
     val price: Int?,
-    @SerialName("price_old")
+    @SerializedName("price_old")
     val priceOld: Int?,
-    @SerialName("size_discount")
-    val discount: Int?
+    @SerializedName("size_discount")
+    val discount: Double?
 )
 
-@Serializable
 data class Images(
-    @SerialName("original")
+    @SerializedName("original")
     val original: String?
 )
