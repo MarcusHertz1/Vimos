@@ -2,12 +2,11 @@ package com.example.vimos.productCatalog
 
 import androidx.compose.runtime.Immutable
 import com.example.vimos.appbase.UiState
-import com.example.vimos.catalog.api.SlugElement
 
 @Immutable
 data class ProductCatalogUiState (
-    val slugList: List<SlugElement> = emptyList(),
     val data: List<Product> = emptyList(),
+    val topBarTitle:String = "",
 ) : UiState
 
 data class Product(

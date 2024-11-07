@@ -35,5 +35,5 @@ abstract class BaseViewModel<STATE: UiState> : ViewModel() {
 }
 
 sealed class NavigationCommand {
-    data class GoToProductCatalog(val slug: String) : NavigationCommand()
+    data class GoToProductCatalog(val slug: String, val title: String) : NavigationCommand()
 }

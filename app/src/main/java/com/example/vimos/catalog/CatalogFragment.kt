@@ -43,6 +43,7 @@ import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
 import com.example.vimos.appbase.NavigationCommand
 import com.example.vimos.appbase.SLUG
+import com.example.vimos.appbase.TOP_BAR_TITLE
 import com.example.vimos.ui.theme.VIMOS_TOOLBAR
 import com.example.vimos.ui.theme.VimosTheme
 import kotlinx.coroutines.channels.Channel
@@ -72,6 +73,7 @@ private fun CatalogScreen(
                         R.id.action_catalogFragment_to_productCatalogFragment,
                         Bundle().apply {
                             putString(SLUG, command.slug)
+                            putString(TOP_BAR_TITLE, command.title)
                         })
                 }
             }

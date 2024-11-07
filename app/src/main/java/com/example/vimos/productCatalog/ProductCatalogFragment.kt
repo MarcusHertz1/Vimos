@@ -15,12 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,6 +48,7 @@ import com.example.vimos.R
 import com.example.vimos.appbase.BaseFragment
 import com.example.vimos.appbase.SLUG
 import com.example.vimos.appbase.toViewModelArguments
+import com.example.vimos.ui.theme.VIMOS_TOOLBAR
 import com.example.vimos.ui.theme.VimosTheme
 import kotlinx.coroutines.channels.Channel
 
@@ -63,21 +68,55 @@ private fun ProductCatalogState(
     viewModel: ProductCatalogViewModel = viewModel(extras = arguments.toViewModelArguments())
 ) {
     val state by viewModel.state.collectAsState()
-    ProductCatalogScreen(state) { slug ->
+    ProductCatalogScreen(state,
+        { slug ->
         navController.navigate(
             R.id.action_productCatalogFragment_to_productCardFragment,
             Bundle().apply {
                 putString(SLUG, slug)
             })
+    }){
+        navController.popBackStack()
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductCatalogScreen(
     state: ProductCatalogUiState,
-    onItemClick: (String) -> Unit = {}
+    onItemClick: (String) -> Unit = {},
+    goBack: () -> Unit = {},
 ) {
-    Scaffold { padding ->
+    val topBarTitle = state.topBarTitle
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                        IconButton(
+                            onClick = {goBack()},
+                            modifier = Modifier
+                                .size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                                contentDescription = "Вернуться назад",
+                            )
+                        }
+                },
+                title = {
+                    Text(
+                        text = topBarTitle,
+                        modifier = Modifier.padding(start = 6.dp)
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = VIMOS_TOOLBAR,
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White
+                )
+            )
+        }
+    ) { padding ->
         ProductCatalogList(
             modifier = Modifier.padding(padding),
             state = state,
@@ -148,6 +187,7 @@ private fun ProductListElement(
                         text = stringResource(R.string.price, element.price, element.units),
                         fontSize = 20.sp,
                     )
+                    println("mr: element.oldPrice = ${element.oldPrice}")
                     if (element.oldPrice.isNotBlank()) {
                         Box(contentAlignment = Alignment.BottomEnd) {
                             Text(

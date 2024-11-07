@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CatalogViewModel  @Inject constructor(
-    private val repository: MainRepository):
-    BaseViewModel<CatalogUiState>() {
+class CatalogViewModel @Inject constructor(
+    private val repository: MainRepository
+) : BaseViewModel<CatalogUiState>() {
     override fun createInitialState() = CatalogUiState()
 
 
@@ -32,7 +32,7 @@ class CatalogViewModel  @Inject constructor(
         }
     }
 
-    internal fun addDepth(depth: Int){
+    internal fun addDepth(depth: Int) {
         val result = state.value.depthIndexList.toMutableList()
         result.add(depth)
         setState {
@@ -43,7 +43,7 @@ class CatalogViewModel  @Inject constructor(
         updateShowingDate()
     }
 
-    internal fun removeDepth(){
+    internal fun removeDepth() {
         val result = state.value.depthIndexList.toMutableList()
         result.removeLastOrNull()
         setState {
@@ -57,13 +57,14 @@ class CatalogViewModel  @Inject constructor(
     private fun updateShowingDate() {
         var categoryData = state.value.dataFromServer
         var topBarTitle = ""
-        var slug: String
         state.value.depthIndexList.forEach { item ->
             topBarTitle = categoryData[item].title.orEmpty()
-            slug = categoryData[item].slug.orEmpty()
-            if(categoryData[item].subCategories.isNullOrEmpty()) {
+            if (categoryData[item].subCategories.isNullOrEmpty()) {
                 removeDepth()
-                navigateTo(NavigationCommand.GoToProductCatalog(slug))
+                navigateTo(NavigationCommand.GoToProductCatalog(
+                    categoryData[item].slug.orEmpty(),
+                    categoryData[item].title.orEmpty()
+                ))
                 return
             }
             categoryData = categoryData[item].subCategories ?: emptyList()
@@ -74,12 +75,11 @@ class CatalogViewModel  @Inject constructor(
                 id = it.id,
                 iconUrl = it.icon.orEmpty(),
                 title = it.title.orEmpty(),
-                )
+            )
         }
         setState {
             copy(
-                showingData = showingData,
-                topBarTitle = topBarTitle
+                showingData = showingData, topBarTitle = topBarTitle
             )
         }
     }
