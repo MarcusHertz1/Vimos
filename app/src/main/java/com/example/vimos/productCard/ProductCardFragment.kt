@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -32,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,7 +83,7 @@ private fun ProductCardScreen(
             title = {},
             navigationIcon = {
                 IconButton(
-                    onClick = {goBack()},
+                    onClick = { goBack() },
                     modifier = Modifier
                         .size(48.dp)
                 ) {
@@ -92,7 +95,7 @@ private fun ProductCardScreen(
             },
             actions = {
                 IconButton(
-                    onClick = {shareText(context, "Арт. ${state.data.sku}\n${state.data.title}")},
+                    onClick = { shareText(context, "Арт. ${state.data.sku}\n${state.data.title}") },
                     modifier = Modifier
                         .size(48.dp)
                 ) {
@@ -120,15 +123,37 @@ private fun ProductCardList(modifier: Modifier = Modifier, state: ProductCardUiS
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
-        AsyncImage(
-            model = "https://storage.vimos.ru/filter/1200w_webp${state.data.iconUrl}",
-            contentDescription = state.data.title,
+        val pagerState = rememberPagerState(pageCount = {
+            state.data.images.size
+        })
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .size(200.dp)
-                .padding(16.dp),
-        )
+                .padding(16.dp)
+        ) {
+            AsyncImage(
+                model = "https://storage.vimos.ru/filter/1200w_webp${state.data.images[it]}",
+                contentDescription = state.data.title,
+            )
+        }
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.spacedBy(9.dp)
+        ){
+            repeat(pagerState.pageCount){page->
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .background(
+                            colorResource(if (pagerState.currentPage == page) R.color.active_dot else R.color.inactive_dot),
+                            RoundedCornerShape(100.dp)
+                        )
+                )
+            }
+        }
         if (state.data.discount.isNotBlank()) {
             Text(
                 color = Color.White,
@@ -219,7 +244,7 @@ fun shareText(context: Context, textToShare: String) {
 
 val previewState = ProductCardUiState(
     data = Product(
-        iconUrl = "",
+        images = listOf("1", "2", "3"),
         discount = "15",
         sku = "24764168",
         title = "Грунтовка Eskaro Aquastop Contact адгез. для невпит./поверх. 1,5 кг",

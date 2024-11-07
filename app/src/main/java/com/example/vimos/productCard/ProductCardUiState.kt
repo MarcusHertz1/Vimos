@@ -9,7 +9,7 @@ data class ProductCardUiState (
 ) : UiState
 
 data class Product(
-    val iconUrl: String = "",
+    val images: List<String> = emptyList(),
     val discount: String = "",
     val sku: String = "",
     val title: String = "",

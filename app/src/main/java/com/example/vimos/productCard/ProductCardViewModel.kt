@@ -31,7 +31,9 @@ internal class ProductCardViewModel @Inject constructor(
                 val price = (dataFromServer.purchase?.price ?: 0) / 100
                 val oldPrice = (dataFromServer.purchase?.priceOld ?: 0) / 100
                 Product(
-                    iconUrl = dataFromServer.images?.firstOrNull()?.original.orEmpty(),
+                    images = dataFromServer.images?.map {
+                        it.original ?: ""
+                    } ?: emptyList(),
                     discount =
                     if ((dataFromServer.purchase?.discount ?: 0.0) > 0)
                         dataFromServer.purchase?.discount?.roundToInt()?.toString().orEmpty()
